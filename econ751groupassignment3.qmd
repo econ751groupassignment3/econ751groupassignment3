@@ -1,0 +1,1318 @@
+---
+title: "Untitled"
+format: html
+---
+
+# ================================
+# 1. Load libraries
+# ================================
+
+```{r}
+library(dplyr)
+library(ggplot2)
+library(readr)
+library(ggrepel)
+```
+
+
+#### CanadaEU2006X
+
+```{r}
+# 2. Import data - CanadaEU2006X
+
+df <- read_csv("CanadaEU2006X.csv")
+```
+# 3. Clean data
+
+
+# ================================
+# 4. Normalize by Greece (GRC = 1)
+# ================================
+
+
+```{r}
+greece <- df %>% filter(country == "Greece")
+
+if(nrow(greece) == 0){
+  stop("Greece (GRC) not found in dataset!")
+}
+
+df <- df %>%
+  mutate(
+    gdp_norm = gdp / greece$gdp,
+    exports_norm = exports / greece$exports
+  )
+```
+
+# ================================
+# 5. Log-log regression
+# ================================
+
+
+```{r}
+model <- lm(log(exports_norm) ~ log(gdp_norm), data = df)
+
+slope <- coef(model)[2]
+r2 <- summary(model)$r.squared
+
+cat("Slope:", slope, "\n")
+cat("R-squared:", r2, "\n")
+```
+
+# ================================
+# 6. Plot (exports)
+# ================================
+
+
+```{r}
+p1 <- ggplot(df, aes(x = gdp_norm, y = exports_norm, label = country)) +
+  
+  geom_point(color = "blue", size = 2) +
+  geom_text_repel(size = 3) +
+  
+  scale_x_log10() +
+  scale_y_log10() +
+  
+  geom_smooth(method = "lm", se = FALSE, color = "black") +
+  
+  annotate("text",
+           x = min(df$gdp_norm),
+           y = max(df$exports_norm),
+           label = paste0("slope = ", round(slope, 2),
+                          "\nfit = ", round(r2, 2)),
+           hjust = 0, size = 3) +
+  
+  labs(
+    title = "Canada's Exports to EU, 2006",
+    x = "GDP (Greece = 1)",
+    y = "Canada's 2006 Exports (Greece = 1)"
+  ) +
+  
+  theme_minimal()
+
+print(p1)
+```
+
+
+#### CanadaEU2006M
+
+
+```{r}
+# ================================
+# 2. Import data
+# ================================
+df <- read_csv("CanadaEU2006M.csv")
+```
+
+# ================================
+# 3. Clean data
+# ================================
+
+# ================================
+# 4. Normalize by Greece (GRC = 1)
+# ================================
+
+
+```{r}
+greece <- df %>% filter(country == "Greece")
+
+if(nrow(greece) == 0){
+  stop("Greece (GRC) not found in dataset!")
+}
+
+df <- df %>%
+  mutate(
+    gdp_norm = gdp / greece$gdp,
+    imports_norm = imports / greece$imports
+  )
+
+```
+
+# ================================
+# 5. Log-log regression
+# ================================
+
+
+```{r}
+model <- lm(log(imports_norm) ~ log(gdp_norm), data = df)
+
+slope <- coef(model)[2]
+r2 <- summary(model)$r.squared
+
+cat("Slope:", slope, "\n")
+cat("R-squared:", r2, "\n")
+
+```
+
+# ================================
+# 6. Plot (exports)
+# ================================
+
+
+```{r}
+p2 <- ggplot(df, aes(x = gdp_norm, y = imports_norm, label = country)) +
+  
+  geom_point(color = "blue", size = 2) +
+  geom_text_repel(size = 3) +
+  
+  scale_x_log10() +
+  scale_y_log10() +
+  
+  geom_smooth(method = "lm", se = FALSE, color = "black") +
+  
+  annotate("text",
+           x = min(df$gdp_norm),
+           y = max(df$imports_norm),
+           label = paste0("slope = ", round(slope, 2),
+                          "\nfit = ", round(r2, 2)),
+           hjust = 0, size = 3) +
+  
+  labs(
+    title = "Canada's Imports to EU, 2006",
+    x = "GDP (Greece = 1)",
+    y = "Canada's 2006 Imports (Greece = 1)"
+  ) +
+  
+  theme_minimal()
+
+print(p2)
+```
+
+#### AustriaEU2006X
+
+
+```{r}
+# ================================
+# 2. Import data
+# ================================
+df <- read_csv("AustriaEU2006X.csv")
+
+
+# ================================
+# 3. Clean data
+# ================================
+
+# ================================
+# 4. Normalize by Greece (GRC = 1)
+# ================================
+greece <- df %>% filter(country == "Greece")
+
+if(nrow(greece) == 0){
+  stop("Greece (GRC) not found in dataset!")
+}
+
+df <- df %>%
+  mutate(
+    gdp_norm = gdp / greece$gdp,
+    exports_norm = exports / greece$exports
+  )
+
+
+# ================================
+# 5. Log-log regression
+# ================================
+model <- lm(log(exports_norm) ~ log(gdp_norm), data = df)
+
+slope <- coef(model)[2]
+r2 <- summary(model)$r.squared
+
+cat("Slope:", slope, "\n")
+cat("R-squared:", r2, "\n")
+
+
+# ================================
+# 6. Plot (exports)
+# ================================
+p3 <- ggplot(df, aes(x = gdp_norm, y = exports_norm, label = country)) +
+  
+  geom_point(color = "blue", size = 2) +
+  geom_text_repel(size = 3) +
+  
+  scale_x_log10() +
+  scale_y_log10() +
+  
+  geom_smooth(method = "lm", se = FALSE, color = "black") +
+  
+  annotate("text",
+           x = min(df$gdp_norm),
+           y = max(df$exports_norm),
+           label = paste0("slope = ", round(slope, 2),
+                          "\nfit = ", round(r2, 2)),
+           hjust = 0, size = 3) +
+  
+  labs(
+    title = "Austria's exports to EU, 2006",
+    x = "GDP (Greece = 1)",
+    y = "Austria's 2006 Exports (Greece=1)"
+  ) +
+  
+  theme_minimal()
+
+print(p3)
+
+```
+
+#### AustriaEU2006M
+
+
+```{r}
+# ================================
+# 2. Import data
+# ================================
+df <- read_csv("AustriaEU2006M.csv")
+
+# ================================
+# 3. Clean data
+# ================================
+
+# ================================
+# 4. Normalize by Greece (GRC = 1)
+# ================================
+greece <- df %>% filter(country == "Greece")
+
+if(nrow(greece) == 0){
+  stop("Greece (GRC) not found in dataset!")
+}
+
+df <- df %>%
+  mutate(
+    gdp_norm = gdp / greece$gdp,
+    imports_norm = imports / greece$imports
+  )
+
+# ================================
+# 5. Log-log regression
+# ================================
+model <- lm(log(imports_norm) ~ log(gdp_norm), data = df)
+
+slope <- coef(model)[2]
+r2 <- summary(model)$r.squared
+
+cat("Slope:", slope, "\n")
+cat("R-squared:", r2, "\n")
+
+# ================================
+# 6. Plot (exports)
+# ================================
+p4 <- ggplot(df, aes(x = gdp_norm, y = imports_norm, label = country)) +
+  
+  geom_point(color = "blue", size = 2) +
+  geom_text_repel(size = 3) +
+  
+  scale_x_log10() +
+  scale_y_log10() +
+  
+  geom_smooth(method = "lm", se = FALSE, color = "black") +
+  
+  annotate("text",
+           x = min(df$gdp_norm),
+           y = max(df$imports_norm),
+           label = paste0("slope = ", round(slope, 2),
+                          "\nfit = ", round(r2, 2)),
+           hjust = 0, size = 3) +
+  
+  labs(
+    title = "Austria Imports to EU (2006)",
+    x = "GDP (GRC = 1)",
+    y = "Imports (GRC = 1)"
+  ) +
+  
+  theme_minimal()
+
+print(p4)
+```
+
+
+#### ArgentinaEU2006X
+
+
+```{r}
+# ================================
+# 2. Import data
+# ================================
+df <- read_csv("ArgentinaEU2006X.csv")
+
+
+# ================================
+# 4. Normalize by Greece (GRC = 1)
+# ================================
+greece <- df %>% filter(country == "Greece")
+
+if(nrow(greece) == 0){
+  stop("Greece (GRC) not found in dataset!")
+}
+
+df <- df %>%
+  mutate(
+    gdp_norm = gdp / greece$gdp,
+    exports_norm = exports / greece$exports
+  )
+
+# ================================
+# 5. Log-log regression
+# ================================
+model <- lm(log(exports_norm) ~ log(gdp_norm), data = df)
+
+slope <- coef(model)[2]
+r2 <- summary(model)$r.squared
+
+cat("Slope:", slope, "\n")
+cat("R-squared:", r2, "\n")
+
+# ================================
+# 6. Plot (exports)
+# ================================
+pAX <- ggplot(df, aes(x = gdp_norm, y = exports_norm, label = country)) +
+  
+  geom_point(color = "blue", size = 2) +
+  geom_text_repel(size = 3) +
+  
+  scale_x_log10() +
+  scale_y_log10() +
+  
+  geom_smooth(method = "lm", se = FALSE, color = "black") +
+  
+  annotate("text",
+           x = min(df$gdp_norm),
+           y = max(df$exports_norm),
+           label = paste0("slope = ", round(slope, 2),
+                          "\nfit = ", round(r2, 2)),
+           hjust = 0, size = 3) +
+  
+  labs(
+    title = "Argentina Exports to EU (2006)",
+    x = "GDP (GRC = 1)",
+    y = "Exports (GRC = 1)"
+  ) +
+  
+  theme_minimal()
+
+print(pAX)
+
+```
+
+
+#### ArgentinaEU2006M
+
+
+
+```{r}
+# ================================
+# 2. Import data
+# ================================
+df <- read_csv("ArgentinaEU2006M.csv")
+
+
+
+# ================================
+# 4. Normalize by Greece (GRC = 1)
+# ================================
+greece <- df %>% filter(country == "Greece")
+
+if(nrow(greece) == 0){
+  stop("Greece (GRC) not found in dataset!")
+}
+
+df <- df %>%
+  mutate(
+    gdp_norm = gdp / greece$gdp,
+    imports_norm = imports / greece$imports
+  )
+
+
+# ================================
+# 5. Log-log regression
+# ================================
+model <- lm(log(imports_norm) ~ log(gdp_norm), data = df)
+
+slope <- coef(model)[2]
+r2 <- summary(model)$r.squared
+
+cat("Slope:", slope, "\n")
+cat("R-squared:", r2, "\n")
+
+
+# ================================
+# 6. Plot (exports)
+# ================================
+pAM <- ggplot(df, aes(x = gdp_norm, y = imports_norm, label = country)) +
+  
+  geom_point(color = "blue", size = 2) +
+  geom_text_repel(size = 3) +
+  
+  scale_x_log10() +
+  scale_y_log10() +
+  
+  geom_smooth(method = "lm", se = FALSE, color = "black") +
+  
+  annotate("text",
+           x = min(df$gdp_norm),
+           y = max(df$imports_norm),
+           label = paste0("slope = ", round(slope, 2),
+                          "\nfit = ", round(r2, 2)),
+           hjust = 0, size = 3) +
+  
+  labs(
+    title = "Argentina Imports to EU (2006)",
+    x = "GDP (GRC = 1)",
+    y = "Imports (GRC = 1)"
+  ) +
+  
+  theme_minimal()
+
+print(pAM)
+```
+
+
+#### AlgeriaEU2006X
+
+
+```{r}
+# ================================
+# 2. Import data
+# ================================
+df <- read_csv("AlgeriaEU2006X.csv")
+
+
+# ================================
+# 4. Normalize by Greece (GRC = 1)
+# ================================
+greece <- df %>% filter(country == "Greece")
+
+if(nrow(greece) == 0){
+  stop("Greece (GRC) not found in dataset!")
+}
+
+df <- df %>%
+  mutate(
+    gdp_norm = gdp / greece$gdp,
+    exports_norm = exports / greece$exports
+  )
+
+# ================================
+# 5. Log-log regression
+# ================================
+model <- lm(log(exports_norm) ~ log(gdp_norm), data = df)
+
+slope <- coef(model)[2]
+r2 <- summary(model)$r.squared
+
+cat("Slope:", slope, "\n")
+cat("R-squared:", r2, "\n")
+
+# ================================
+# 6. Plot (exports)
+# ================================
+pALX <- ggplot(df, aes(x = gdp_norm, y = exports_norm, label = country)) +
+  
+  geom_point(color = "blue", size = 2) +
+  geom_text_repel(size = 3) +
+  
+  scale_x_log10() +
+  scale_y_log10() +
+  
+  geom_smooth(method = "lm", se = FALSE, color = "black") +
+  
+  annotate("text",
+           x = min(df$gdp_norm),
+           y = max(df$exports_norm),
+           label = paste0("slope = ", round(slope, 2),
+                          "\nfit = ", round(r2, 2)),
+           hjust = 0, size = 3) +
+  
+  labs(
+    title = "Algeria Exports to EU (2006)",
+    x = "GDP (GRC = 1)",
+    y = "Exports (GRC = 1)"
+  ) +
+  
+  theme_minimal()
+
+print(pALX)
+
+```
+
+
+#### AlgeriaEU2006M
+
+
+
+```{r}
+# ================================
+# 2. Import data
+# ================================
+df <- read_csv("AlgeriaEU2006M.csv")
+
+
+
+# ================================
+# 4. Normalize by Greece (GRC = 1)
+# ================================
+greece <- df %>% filter(country == "Greece")
+
+if(nrow(greece) == 0){
+  stop("Greece (GRC) not found in dataset!")
+}
+
+df <- df %>%
+  mutate(
+    gdp_norm = gdp / greece$gdp,
+    imports_norm = imports / greece$imports
+  )
+
+
+# ================================
+# 5. Log-log regression
+# ================================
+model <- lm(log(imports_norm) ~ log(gdp_norm), data = df)
+
+slope <- coef(model)[2]
+r2 <- summary(model)$r.squared
+
+cat("Slope:", slope, "\n")
+cat("R-squared:", r2, "\n")
+
+
+# ================================
+# 6. Plot (exports)
+# ================================
+pALM <- ggplot(df, aes(x = gdp_norm, y = imports_norm, label = country)) +
+  
+  geom_point(color = "blue", size = 2) +
+  geom_text_repel(size = 3) +
+  
+  scale_x_log10() +
+  scale_y_log10() +
+  
+  geom_smooth(method = "lm", se = FALSE, color = "black") +
+  
+  annotate("text",
+           x = min(df$gdp_norm),
+           y = max(df$imports_norm),
+           label = paste0("slope = ", round(slope, 2),
+                          "\nfit = ", round(r2, 2)),
+           hjust = 0, size = 3) +
+  
+  labs(
+    title = "Algeria Imports to EU (2006)",
+    x = "GDP (GRC = 1)",
+    y = "Imports (GRC = 1)"
+  ) +
+  
+  theme_minimal()
+
+print(pALM)
+```
+
+
+
+
+#### SKoreaEU2006X
+
+
+```{r}
+# ================================
+# 2. Import data
+# ================================
+df <- read_csv("SKoreaEU2006X.csv")
+
+
+# ================================
+# 4. Normalize by Greece (GRC = 1)
+# ================================
+greece <- df %>% filter(country == "Greece")
+
+if(nrow(greece) == 0){
+  stop("Greece (GRC) not found in dataset!")
+}
+
+df <- df %>%
+  mutate(
+    gdp_norm = gdp / greece$gdp,
+    exports_norm = exports / greece$exports
+  )
+
+# ================================
+# 5. Log-log regression
+# ================================
+model <- lm(log(exports_norm) ~ log(gdp_norm), data = df)
+
+slope <- coef(model)[2]
+r2 <- summary(model)$r.squared
+
+cat("Slope:", slope, "\n")
+cat("R-squared:", r2, "\n")
+
+# ================================
+# 6. Plot (exports)
+# ================================
+pSKX <- ggplot(df, aes(x = gdp_norm, y = exports_norm, label = country)) +
+  
+  geom_point(color = "blue", size = 2) +
+  geom_text_repel(size = 3) +
+  
+  scale_x_log10() +
+  scale_y_log10() +
+  
+  geom_smooth(method = "lm", se = FALSE, color = "black") +
+  
+  annotate("text",
+           x = min(df$gdp_norm),
+           y = max(df$exports_norm),
+           label = paste0("slope = ", round(slope, 2),
+                          "\nfit = ", round(r2, 2)),
+           hjust = 0, size = 3) +
+  
+  labs(
+    title = "South Korea Exports to EU (2006)",
+    x = "GDP (GRC = 1)",
+    y = "Exports (GRC = 1)"
+  ) +
+  
+  theme_minimal()
+
+print(pSKX)
+
+```
+
+
+
+#### SkoreaEU2006M
+
+
+```{r}
+# ================================
+# 2. Import data
+# ================================
+df <- read_csv("SKoreaEU2006M.csv")
+
+
+
+# ================================
+# 4. Normalize by Greece (GRC = 1)
+# ================================
+greece <- df %>% filter(country == "Greece")
+
+if(nrow(greece) == 0){
+  stop("Greece (GRC) not found in dataset!")
+}
+
+df <- df %>%
+  mutate(
+    gdp_norm = gdp / greece$gdp,
+    imports_norm = imports / greece$imports
+  )
+
+
+# ================================
+# 5. Log-log regression
+# ================================
+model <- lm(log(imports_norm) ~ log(gdp_norm), data = df)
+
+slope <- coef(model)[2]
+r2 <- summary(model)$r.squared
+
+cat("Slope:", slope, "\n")
+cat("R-squared:", r2, "\n")
+
+
+# ================================
+# 6. Plot (exports)
+# ================================
+pSKM <- ggplot(df, aes(x = gdp_norm, y = imports_norm, label = country)) +
+  
+  geom_point(color = "blue", size = 2) +
+  geom_text_repel(size = 3) +
+  
+  scale_x_log10() +
+  scale_y_log10() +
+  
+  geom_smooth(method = "lm", se = FALSE, color = "black") +
+  
+  annotate("text",
+           x = min(df$gdp_norm),
+           y = max(df$imports_norm),
+           label = paste0("slope = ", round(slope, 2),
+                          "\nfit = ", round(r2, 2)),
+           hjust = 0, size = 3) +
+  
+  labs(
+    title = "South Korea Imports to EU (2006)",
+    x = "GDP (GRC = 1)",
+    y = "Imports (GRC = 1)"
+  ) +
+  
+  theme_minimal()
+
+print(pSKM)
+```
+
+
+
+
+
+#### NZealandEU2006X
+
+
+```{r}
+# ================================
+# 2. Import data
+# ================================
+df <- read_csv("NZealandEU2006X.csv")
+
+
+# ================================
+# 4. Normalize by Greece (GRC = 1)
+# ================================
+greece <- df %>% filter(country == "Greece")
+
+if(nrow(greece) == 0){
+  stop("Greece (GRC) not found in dataset!")
+}
+
+df <- df %>%
+  mutate(
+    gdp_norm = gdp / greece$gdp,
+    exports_norm = exports / greece$exports
+  )
+
+# ================================
+# 5. Log-log regression
+# ================================
+model <- lm(log(exports_norm) ~ log(gdp_norm), data = df)
+
+slope <- coef(model)[2]
+r2 <- summary(model)$r.squared
+
+cat("Slope:", slope, "\n")
+cat("R-squared:", r2, "\n")
+
+# ================================
+# 6. Plot (exports)
+# ================================
+pNZX <- ggplot(df, aes(x = gdp_norm, y = exports_norm, label = country)) +
+  
+  geom_point(color = "blue", size = 2) +
+  geom_text_repel(size = 3) +
+  
+  scale_x_log10() +
+  scale_y_log10() +
+  
+  geom_smooth(method = "lm", se = FALSE, color = "black") +
+  
+  annotate("text",
+           x = min(df$gdp_norm),
+           y = max(df$exports_norm),
+           label = paste0("slope = ", round(slope, 2),
+                          "\nfit = ", round(r2, 2)),
+           hjust = 0, size = 3) +
+  
+  labs(
+    title = "New Zealand Exports to EU (2006)",
+    x = "GDP (GRC = 1)",
+    y = "Exports (GRC = 1)"
+  ) +
+  
+  theme_minimal()
+
+print(pNZX)
+
+```
+
+
+#### NZealandEU2006M
+
+
+```{r}
+# ================================
+# 2. Import data
+# ================================
+df <- read_csv("NZealandEU2006M.csv")
+
+
+
+# ================================
+# 4. Normalize by Greece (GRC = 1)
+# ================================
+greece <- df %>% filter(country == "Greece")
+
+if(nrow(greece) == 0){
+  stop("Greece (GRC) not found in dataset!")
+}
+
+df <- df %>%
+  mutate(
+    gdp_norm = gdp / greece$gdp,
+    imports_norm = imports / greece$imports
+  )
+
+
+# ================================
+# 5. Log-log regression
+# ================================
+model <- lm(log(imports_norm) ~ log(gdp_norm), data = df)
+
+slope <- coef(model)[2]
+r2 <- summary(model)$r.squared
+
+cat("Slope:", slope, "\n")
+cat("R-squared:", r2, "\n")
+
+
+# ================================
+# 6. Plot (exports)
+# ================================
+pNZM <- ggplot(df, aes(x = gdp_norm, y = imports_norm, label = country)) +
+  
+  geom_point(color = "blue", size = 2) +
+  geom_text_repel(size = 3) +
+  
+  scale_x_log10() +
+  scale_y_log10() +
+  
+  geom_smooth(method = "lm", se = FALSE, color = "black") +
+  
+  annotate("text",
+           x = min(df$gdp_norm),
+           y = max(df$imports_norm),
+           label = paste0("slope = ", round(slope, 2),
+                          "\nfit = ", round(r2, 2)),
+           hjust = 0, size = 3) +
+  
+  labs(
+    title = "New Zealand Imports to EU (2006)",
+    x = "GDP (GRC = 1)",
+    y = "Imports (GRC = 1)"
+  ) +
+  
+  theme_minimal()
+
+print(pNZM)
+```
+
+
+
+
+#### SAEU2006X
+
+
+```{r}
+# ================================
+# 2. Import data
+# ================================
+df <- read_csv("SAEU2006X.csv")
+
+
+# ================================
+# 4. Normalize by Greece (GRC = 1)
+# ================================
+greece <- df %>% filter(country == "Greece")
+
+if(nrow(greece) == 0){
+  stop("Greece (GRC) not found in dataset!")
+}
+
+df <- df %>%
+  mutate(
+    gdp_norm = gdp / greece$gdp,
+    exports_norm = exports / greece$exports
+  )
+
+# ================================
+# 5. Log-log regression
+# ================================
+model <- lm(log(exports_norm) ~ log(gdp_norm), data = df)
+
+slope <- coef(model)[2]
+r2 <- summary(model)$r.squared
+
+cat("Slope:", slope, "\n")
+cat("R-squared:", r2, "\n")
+
+# ================================
+# 6. Plot (exports)
+# ================================
+pSAX <- ggplot(df, aes(x = gdp_norm, y = exports_norm, label = country)) +
+  
+  geom_point(color = "blue", size = 2) +
+  geom_text_repel(size = 3) +
+  
+  scale_x_log10() +
+  scale_y_log10() +
+  
+  geom_smooth(method = "lm", se = FALSE, color = "black") +
+  
+  annotate("text",
+           x = min(df$gdp_norm),
+           y = max(df$exports_norm),
+           label = paste0("slope = ", round(slope, 2),
+                          "\nfit = ", round(r2, 2)),
+           hjust = 0, size = 3) +
+  
+  labs(
+    title = "Saudi Arabia Exports to EU (2006)",
+    x = "GDP (GRC = 1)",
+    y = "Exports (GRC = 1)"
+  ) +
+  
+  theme_minimal()
+
+print(pSAX)
+
+```
+
+#### SAEU2006M
+
+
+```{r}
+# ================================
+# 2. Import data
+# ================================
+df <- read_csv("SAEU2006M.csv")
+
+
+
+# ================================
+# 4. Normalize by Greece (GRC = 1)
+# ================================
+greece <- df %>% filter(country == "Greece")
+
+if(nrow(greece) == 0){
+  stop("Greece (GRC) not found in dataset!")
+}
+
+df <- df %>%
+  mutate(
+    gdp_norm = gdp / greece$gdp,
+    imports_norm = imports / greece$imports
+  )
+
+
+# ================================
+# 5. Log-log regression
+# ================================
+model <- lm(log(imports_norm) ~ log(gdp_norm), data = df)
+
+slope <- coef(model)[2]
+r2 <- summary(model)$r.squared
+
+cat("Slope:", slope, "\n")
+cat("R-squared:", r2, "\n")
+
+
+# ================================
+# 6. Plot (exports)
+# ================================
+pSAM <- ggplot(df, aes(x = gdp_norm, y = imports_norm, label = country)) +
+  
+  geom_point(color = "blue", size = 2) +
+  geom_text_repel(size = 3) +
+  
+  scale_x_log10() +
+  scale_y_log10() +
+  
+  geom_smooth(method = "lm", se = FALSE, color = "black") +
+  
+  annotate("text",
+           x = min(df$gdp_norm),
+           y = max(df$imports_norm),
+           label = paste0("slope = ", round(slope, 2),
+                          "\nfit = ", round(r2, 2)),
+           hjust = 0, size = 3) +
+  
+  labs(
+    title = "Saudi Arabia Imports to EU (2006)",
+    x = "GDP (GRC = 1)",
+    y = "Imports (GRC = 1)"
+  ) +
+  
+  theme_minimal()
+
+print(pSAM)
+```
+
+
+
+#### BAEU2006X
+
+
+```{r}
+# ================================
+# 2. Import data
+# ================================
+df <- read_csv("BAEU2006X.csv")
+
+
+# ================================
+# 4. Normalize by Greece (GRC = 1)
+# ================================
+greece <- df %>% filter(country == "Greece")
+
+if(nrow(greece) == 0){
+  stop("Greece (GRC) not found in dataset!")
+}
+
+df <- df %>%
+  mutate(
+    gdp_norm = gdp / greece$gdp,
+    exports_norm = exports / greece$exports
+  )
+
+# ================================
+# 5. Log-log regression
+# ================================
+model <- lm(log(exports_norm) ~ log(gdp_norm), data = df)
+
+slope <- coef(model)[2]
+r2 <- summary(model)$r.squared
+
+cat("Slope:", slope, "\n")
+cat("R-squared:", r2, "\n")
+
+# ================================
+# 6. Plot (exports)
+# ================================
+pBAX <- ggplot(df, aes(x = gdp_norm, y = exports_norm, label = country)) +
+  
+  geom_point(color = "blue", size = 2) +
+  geom_text_repel(size = 3) +
+  
+  scale_x_log10() +
+  scale_y_log10() +
+  
+  geom_smooth(method = "lm", se = FALSE, color = "black") +
+  
+  annotate("text",
+           x = min(df$gdp_norm),
+           y = max(df$exports_norm),
+           label = paste0("slope = ", round(slope, 2),
+                          "\nfit = ", round(r2, 2)),
+           hjust = 0, size = 3) +
+  
+  labs(
+    title = "Bangladesh Exports to EU (2006)",
+    x = "GDP (GRC = 1)",
+    y = "Exports (GRC = 1)"
+  ) +
+  
+  theme_minimal()
+
+print(pBAX)
+
+```
+
+
+
+
+
+#### BAEU2006M
+
+
+```{r}
+# ================================
+# 2. Import data
+# ================================
+df <- read_csv("BAEU2006M.csv")
+
+
+
+# ================================
+# 4. Normalize by Greece (GRC = 1)
+# ================================
+greece <- df %>% filter(country == "Greece")
+
+if(nrow(greece) == 0){
+  stop("Greece (GRC) not found in dataset!")
+}
+
+df <- df %>%
+  mutate(
+    gdp_norm = gdp / greece$gdp,
+    imports_norm = imports / greece$imports
+  )
+
+
+# ================================
+# 5. Log-log regression
+# ================================
+model <- lm(log(imports_norm) ~ log(gdp_norm), data = df)
+
+slope <- coef(model)[2]
+r2 <- summary(model)$r.squared
+
+cat("Slope:", slope, "\n")
+cat("R-squared:", r2, "\n")
+
+
+# ================================
+# 6. Plot (exports)
+# ================================
+pBAM <- ggplot(df, aes(x = gdp_norm, y = imports_norm, label = country)) +
+  
+  geom_point(color = "blue", size = 2) +
+  geom_text_repel(size = 3) +
+  
+  scale_x_log10() +
+  scale_y_log10() +
+  
+  geom_smooth(method = "lm", se = FALSE, color = "black") +
+  
+  annotate("text",
+           x = min(df$gdp_norm),
+           y = max(df$imports_norm),
+           label = paste0("slope = ", round(slope, 2),
+                          "\nfit = ", round(r2, 2)),
+           hjust = 0, size = 3) +
+  
+  labs(
+    title = "Bangladesh Imports to EU (2006)",
+    x = "GDP (GRC = 1)",
+    y = "Imports (GRC = 1)"
+  ) +
+  
+  theme_minimal()
+
+print(pBAM)
+```
+
+
+
+#### SWEU2006X
+
+
+```{r}
+# ================================
+# 2. Import data
+# ================================
+df <- read_csv("SWEU2006X.csv")
+
+
+# ================================
+# 4. Normalize by Greece (GRC = 1)
+# ================================
+greece <- df %>% filter(country == "Greece")
+
+if(nrow(greece) == 0){
+  stop("Greece (GRC) not found in dataset!")
+}
+
+df <- df %>%
+  mutate(
+    gdp_norm = gdp / greece$gdp,
+    exports_norm = exports / greece$exports
+  )
+
+# ================================
+# 5. Log-log regression
+# ================================
+model <- lm(log(exports_norm) ~ log(gdp_norm), data = df)
+
+slope <- coef(model)[2]
+r2 <- summary(model)$r.squared
+
+cat("Slope:", slope, "\n")
+cat("R-squared:", r2, "\n")
+
+# ================================
+# 6. Plot (exports)
+# ================================
+pSWX <- ggplot(df, aes(x = gdp_norm, y = exports_norm, label = country)) +
+  
+  geom_point(color = "blue", size = 2) +
+  geom_text_repel(size = 3) +
+  
+  scale_x_log10() +
+  scale_y_log10() +
+  
+  geom_smooth(method = "lm", se = FALSE, color = "black") +
+  
+  annotate("text",
+           x = min(df$gdp_norm),
+           y = max(df$exports_norm),
+           label = paste0("slope = ", round(slope, 2),
+                          "\nfit = ", round(r2, 2)),
+           hjust = 0, size = 3) +
+  
+  labs(
+    title = "Switzerland Exports to EU (2006)",
+    x = "GDP (GRC = 1)",
+    y = "Exports (GRC = 1)"
+  ) +
+  
+  theme_minimal()
+
+print(pSWX)
+
+```
+
+
+
+#### SWEU2006M
+
+
+```{r}
+# ================================
+# 2. Import data
+# ================================
+df <- read_csv("SWEU2006M.csv")
+
+
+
+# ================================
+# 4. Normalize by Greece (GRC = 1)
+# ================================
+greece <- df %>% filter(country == "Greece")
+
+if(nrow(greece) == 0){
+  stop("Greece (GRC) not found in dataset!")
+}
+
+df <- df %>%
+  mutate(
+    gdp_norm = gdp / greece$gdp,
+    imports_norm = imports / greece$imports
+  )
+
+
+# ================================
+# 5. Log-log regression
+# ================================
+model <- lm(log(imports_norm) ~ log(gdp_norm), data = df)
+
+slope <- coef(model)[2]
+r2 <- summary(model)$r.squared
+
+cat("Slope:", slope, "\n")
+cat("R-squared:", r2, "\n")
+
+
+# ================================
+# 6. Plot (exports)
+# ================================
+pSWM <- ggplot(df, aes(x = gdp_norm, y = imports_norm, label = country)) +
+  
+  geom_point(color = "blue", size = 2) +
+  geom_text_repel(size = 3) +
+  
+  scale_x_log10() +
+  scale_y_log10() +
+  
+  geom_smooth(method = "lm", se = FALSE, color = "black") +
+  
+  annotate("text",
+           x = min(df$gdp_norm),
+           y = max(df$imports_norm),
+           label = paste0("slope = ", round(slope, 2),
+                          "\nfit = ", round(r2, 2)),
+           hjust = 0, size = 3) +
+  
+  labs(
+    title = "Switzerland Imports to EU (2006)",
+    x = "GDP (GRC = 1)",
+    y = "Imports (GRC = 1)"
+  ) +
+  
+  theme_minimal()
+
+print(pSWM)
+```
